@@ -1,5 +1,1 @@
-Douglas Bruce
-0510109
-Lab 3
-
-The design is a 3D tetrahedron with vertices colored magenta, red, yellow, and green which is on a black canvas. The colors are interpolated inbetween vertices. Matrix multiplication for transformations are done in the HTML file while functions in the Java script file are responsible for the manipulation of the matrices. The transformations used are rotation around the x, y, and z axes, translations along the x and y axes, as well as scaling in the x and y axes. Invoking the manipulation of these transformations comes from the keys. Q, E, and R for the x, y and z rotation respectively, Z and X for scaling in the x and y respectively, W and S for translations up and down the y axes, and A and D for up and down the x axes. When a key is pressed the corresponding variable for the corresponding tranformation is incremented. All transformations are increased by and increment of 0.1. Variables for all transformations are used in the HTML from the Javascript as uniform float variables. A single press of the key increments once, while holding the keys continuously increments the desired transformation. The order of the matrix multiplication and transformations is as follows: scaling, translation, z rotation, y rotation, and finally x rotation.
+README
