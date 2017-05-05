@@ -4,21 +4,26 @@
 <!-- Project 2 -->
 <html>
 <head>
-<title>Project 2</title>
             
 <script id="vertex-shader" type="x-shader/x-vertex">
 	attribute vec4 myColor;
 	attribute vec4 myPosition;
 	varying vec4 fragmentColor;
+	
+	uniform mat4 M;
+	
+	uniform mat4 P_persp;
 
 	uniform float alpha;
 	uniform float beta;
 	uniform float gamma;
 	
-
 	mat4 M_x, M_y, M_z;
 	
 	void main() {
+		gl_PointSize = 1.0;
+		vec4 vertexPositionTransformed = M * myPosition;
+		
 		M_x = mat4
 		(1, 0, 0, 0,
 		0, cos(alpha), -sin(alpha), 0,
@@ -37,7 +42,7 @@
 		0, 0, 1, 0,
 		0, 0, 0, 1);
 		
-		gl_Position= M_x * M_y * M_z * myPosition;
+		gl_Position= M_x * M_y * M_z * P_persp * vertexPositionTransformed;;
 		fragmentColor=myColor;
 	}
 </script>

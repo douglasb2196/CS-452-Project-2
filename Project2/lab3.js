@@ -13,9 +13,9 @@ var zt;
 
 function init() {	
 	var canvas = document.getElementById("gl-canvas"); // set up the canvas
-	alpha=.2;
-	beta=-2.4;
-	gamma=.0;
+	alpha=0.0;
+	beta=0.0;
+	gamma=0.0;
 	xScale=1.0;
 	yScale=1.0;
 	xt=.0;
@@ -33,6 +33,14 @@ function init() {
 	
 	gl.enable( gl.DEPTH_TEST );
 	
+	var myPosition = gl.getAttribLocation(myShaderProgram,"myPosition");
+	gl.vertexAttribPointer( myPosition, 4, gl.FLOAT, false, 0, 0 );
+	gl.enableVertexAttribArray( myPosition );
+
+	var myColor = gl.getUniformLocation(myShaderProgram,"myColor");
+	gl.vertexAttribPointer( myColor, 4, gl.FLOAT, false, 0, 0 );
+	gl.enableVertexAttribArray( myColor );
+	
 	alphaLoc=gl.getUniformLocation(myShaderProgram,"alpha");
 	gl.uniform1f(alphaLoc,alpha);
 	
@@ -41,6 +49,45 @@ function init() {
 	
 	gammaLoc=gl.getUniformLocation(myShaderProgram,"gamma");
 	gl.uniform1f(gammaLoc,gamma);
+	
+	var e = vec3( .5, 0.5, 1.3 );  // eye
+    var a = vec3( 0.0, 0.0, 0.0 );    // at point
+    var vup = vec3( 0.0, 1.0, 0.0 );  // up vector
+    var n = normalize( vec3( e[0]-a[0], e[1]-a[1], e[2]-a[2]));
+	var u = normalize(cross(vup,n));
+    var v = normalize(cross(n,u));
+	var modelviewMatrix = [
+	   u[0], v[0], n[0], 0.0,
+	   u[1], v[1], n[1], 0.0,
+	   u[2], v[2], n[2], 0.0,
+	  -u[0]*e[0]-u[1]*e[1]-u[2]*e[2],
+	  -v[0]*e[0]-v[1]*e[1]-v[2]*e[2],
+	  -n[0]*e[0]-n[1]*e[1]-n[2]*e[2], 1.0];
+	  
+	var modelviewMatrixInverseTranspose = [
+		u[0], v[0], n[0], e[0],
+		u[1], v[1], n[1], e[1],
+		u[2], v[2], n[2], e[2],
+		0.0, 0.0, 0.0, 1.0];
+		
+	var modelviewMatrixLocation = gl.getUniformLocation( myShaderProgram, "M" );
+    gl.uniformMatrix4fv(modelviewMatrixLocation, false, modelviewMatrix);
+	
+	// Projection matrix
+    var left = -.9;
+    var right = .9;
+    var top = .9;
+    var bottom = -.9;
+    var near = 0.75;
+    var far = 2.5;	
+	var perpspectiveProjectionMatrix =
+        [2.0*near/(right-left), .0, .0, .0,
+         .0, 2.0*near/(top-bottom), .0, .0,
+         (right+left)/(right-left), (top+bottom)/(top-bottom), -(far+near)/(far-near), -1.0,
+         .0, .0, -2.0*far*near/(far-near), .0];
+		 
+	var perpspectiveProjectionMatrixLocation = gl.getUniformLocation(myShaderProgram, "P_persp");
+    gl.uniformMatrix4fv(perpspectiveProjectionMatrixLocation, false, perpspectiveProjectionMatrix);
 	
 	render();
 }
@@ -153,7 +200,6 @@ function setupLamp(x, y, z) {
 	
 	gl.drawElements( gl.TRIANGLES, 90, gl.UNSIGNED_BYTE, 0 );
 }
-
 function setupGround(x, y, z) {
 
 	var vertices = [
@@ -629,7 +675,6 @@ function moveKeys(event) {
 
 function render() {
 	gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
-	requestAnimFrame(render);
 	
 	setupLamp(0.5, 0.25, 0.2);
 	
@@ -638,6 +683,8 @@ function render() {
 	setupChair(0.0+xt, -0.075, 0.5+zt);
 	
 	setupTable(0.0, 0.0, 0.0);
+	
+	requestAnimFrame(render);
 }
 
 //Translations for Chair
