@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!-- Douglas Bruce -->
+<!-- 0510109 -->
+<!-- Project 2 -->
+<html>
+<head>
+<title>Project 2</title>
+            
+<script id="vertex-shader" type="x-shader/x-vertex">
+	attribute vec4 myColor;
+	attribute vec4 myPosition;
+	varying vec4 fragmentColor;
+
+	uniform float alpha;
+	uniform float beta;
+	uniform float gamma;
+	
+
+	mat4 M_x, M_y, M_z;
+	
+	void main() {
+		M_x = mat4
+		(1, 0, 0, 0,
+		0, cos(alpha), -sin(alpha), 0,
+		0, sin(alpha), cos(alpha), 0,
+		0, 0, 0, 1);
+		
+		M_y = mat4
+		(cos(beta), 0,-sin(beta), 0,
+		0, 1, 0, 0,
+		sin(beta), 0, cos(beta), 0,
+		0, 0, 0, 1);
+		
+		M_z = mat4
+		(cos(gamma), -sin(gamma), 0, 0,
+		sin(gamma), cos(gamma), 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1);
+		
+		gl_Position= M_x * M_y * M_z * myPosition;
+		fragmentColor=myColor;
+	}
+</script>
+<script id="fragment-shader" type="x-shader/x-fragment">
+	precision mediump float;
+	varying vec4 fragmentColor;
+	void main() {
+		gl_FragColor=fragmentColor;
+	}
+</script>
+			
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+
+<script type="text/javascript" src="lab3.js"></script>
+</head>    
+<body onload="init()" onkeydown="moveKeys(event)">
+	<canvas id="gl-canvas" width="512" height="512"></canvas><br/>
+</body>
+</html>
+
