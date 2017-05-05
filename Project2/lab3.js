@@ -624,11 +624,7 @@ function moveKeys(event) {
 		rotateAroundY();
 	} else if ( theKeyCode==81 ) {	//Q
 		rotateAroundX();
-	} else if ( theKeyCode==88 ) {	//Z
-		scaleY();
-	} else if ( theKeyCode==90 ) {	//X
-		scaleX();
-	} 
+	}
 }
 
 function render() {
